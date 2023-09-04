@@ -129,6 +129,7 @@ def get_company_finacial_info(ticker_data):
     # income_statement(損益計算書)、cash_flow、balance_sheet(貸借対照表)を取得する
     try:
         income_statement = ticker_data.income_statement(trailing=False)
+#        income_statement = ticker_data.income_statement()
         cash_flow = ticker_data.cash_flow(trailing=False)
         balance_sheet = ticker_data.balance_sheet()
     except Exception as e:
@@ -138,17 +139,86 @@ def get_company_finacial_info(ticker_data):
     # 過去の売上高、純利益、純資産、総資産を取得する
     try:
         past_totalrevenue = income_statement[['asOfDate', 'TotalRevenue']]
+    except Exception as e:
+        print(e)
+        return        
+    try:
         past_grossprofit =  income_statement[['asOfDate', 'GrossProfit']]
+    except Exception as e:
+        print(e)
+        print(income_statement[['asOfDate']])
+        income_statement[['GrossProfit']]  = 0
+        past_grossprofit =  income_statement[['asOfDate', 'GrossProfit']]
+
+    try:
+        past_CostOfRevenue = income_statement[['asOfDate', 'CostOfRevenue']]
+
+        past_DilutedNIAvailtoComStockholders = income_statement[['asOfDate', 'DilutedNIAvailtoComStockholders']]
+        past_EBIT =  income_statement[['asOfDate', 'EBIT']]
+    except Exception as e:
+        print(e)
+        return   
+    try:
+        past_EBITDA =  income_statement[['asOfDate', 'EBITDA']]
+    except Exception as e:
+        print(e)
+#        print("setting EBITDA")
+        income_statement[['EBITDA']]  = 0
+        past_EBITDA =  income_statement[['asOfDate', 'EBITDA']]
+#        print(past_EBITDA)
+#        print("done")
+    try:
+#        past_EarningsFromEquityInterest = income_statement[['asOfDate', 'EarningsFromEquityInterest']]
+#        past_EarningsFromEquityInterestNetOfTax = income_statement[['asOfDate', 'EarningsFromEquityInterestNetOfTax']]
+#        past_GainOnSaleOfSecurity = income_statement[['asOfDate', 'GainOnSaleOfSecurity']]
+#        past_InterestExpense = income_statement[['asOfDate', 'InterestExpense']]
+#        past_InterestExpenseNonOperating = income_statement[['asOfDate', 'InterestExpenseNonOperating']]
+#        past_InterestIncome = income_statement[['asOfDate', 'InterestIncome']]
+#        past_InterestIncomeNonOperating = income_statement[['asOfDate', 'InterestIncomeNonOperating']]
+#        past_MinorityInterests = income_statement[['asOfDate', 'MinorityInterests']]
+#        past_NetIncome = income_statement[['asOfDate', 'NetIncome']]
+        past_NetIncomeCommonStockholders = income_statement[['asOfDate', 'NetIncomeCommonStockholders']]
+        past_NetIncomeContinuousOperations = income_statement[['asOfDate', 'NetIncomeContinuousOperations']]
+        past_NetIncomeFromContinuingAndDiscontinuedOperation = income_statement[['asOfDate', 'NetIncomeFromContinuingAndDiscontinuedOperation']]
+        past_NetIncomeIncludingNoncontrollingInterests = income_statement[['asOfDate', 'NetIncomeIncludingNoncontrollingInterests']]
+    
+#        past_NetInterestIncome = income_statement[['asOfDate', 'NetInterestIncome']]
+
+        past_NetNonOperatingInterestIncomeExpense = income_statement[['asOfDate', 'NetNonOperatingInterestIncomeExpense']]
+        past_NormalizedEBITDA = income_statement[['asOfDate', 'NormalizedEBITDA']]
+        past_NormalizedIncome = income_statement[['asOfDate', 'NormalizedIncome']]
+
+#        past_OperatingExpense = income_statement[['asOfDate', 'OperatingExpense']]
+#        past_OperatingExpense = [income_statement[['asOfDate']],0]
+
+        past_OperatingIncome = income_statement[['asOfDate', 'OperatingIncome']]
+        past_OperatingRevenue = income_statement[['asOfDate', 'OperatingRevenue']]
+#        past_OtherIncomeExpense = income_statement[['asOfDate', 'OtherIncomeExpense']]
+#        past_OtherNonOperatingIncomeExpenses = income_statement[['asOfDate', 'OtherNonOperatingIncomeExpenses']] 
+#       past_OtherunderPreferredStockDividend = income_statement[['asOfDate', 'OtherunderPreferredStockDividend']]
+        past_PretaxIncome = income_statement[['asOfDate', 'PretaxIncome']]
+        past_ReconciledCostOfRevenue = income_statement[['asOfDate', 'ReconciledCostOfRevenue']]
+#        past_ReconciledDepreciation = income_statement[['asOfDate', 'ReconciledDepreciation']]
+#        past_SellingGeneralAndAdministration = income_statement[['asOfDate', 'SellingGeneralAndAdministration']]
+        past_TaxEffectOfUnusualItems = income_statement[['asOfDate', 'TaxEffectOfUnusualItems']]
+        past_TaxProvision = income_statement[['asOfDate', 'TaxProvision']]
+        past_TaxRateForCalcs = income_statement[['asOfDate', 'TaxRateForCalcs']]
+        past_TotalExpenses = income_statement[['asOfDate', 'TotalExpenses']]
+#        past_TotalOperatingIncomeAsReported = income_statement[['asOfDate', 'TotalOperatingIncomeAsReported']]
+#        past_TotalOtherFinanceCost = income_statement[['asOfDate', 'TotalOtherFinanceCost']]
+#        past_TotalUnusualItems = income_statement[['asOfDate', 'TotalUnusualItems']]
+#        past_TotalUnusualItemsExcludingGoodwill = income_statement[['asOfDate', 'TotalUnusualItemsExcludingGoodwill']]
+
         past_netincome = cash_flow[['asOfDate', 'NetIncome']]
         past_stockholdersequity = balance_sheet[['asOfDate', 'StockholdersEquity']]
         past_totalassets = balance_sheet[['asOfDate', 'TotalAssets']]
     except Exception as e:
         print(e)
+#        print(income_statement.T)
         return
 
     # income_statement(損益計算書)、cash_flow、balance_sheet(貸借対照表)の決算日を取得する
     past_totalrevenue_asofdate = income_statement['asOfDate']
-    past_grossprofit_asofdate = income_statement['asOfDate']
     past_netincome_asofdate = cash_flow['asOfDate']
     past_stockholdersequity_asofdate = balance_sheet['asOfDate']
     past_totalassets_asofdate = balance_sheet['asOfDate']
@@ -160,20 +230,145 @@ def get_company_finacial_info(ticker_data):
     # 共通している日時の売上高、純利益、純資産、総資産を抽出する
     result_past_totalrevenue = pd.DataFrame()
     result_past_grossprofit = pd.DataFrame()
+    result_past_CostOfRevenue = pd.DataFrame()
+    result_past_DilutedNIAvailtoComStockholders =  pd.DataFrame()
+    result_past_EBIT =  pd.DataFrame()
+    result_past_EBITDA =   pd.DataFrame()
+#    result_past_EarningsFromEquityInterest =  pd.DataFrame()
+#    result_past_EarningsFromEquityInterestNetOfTax =  pd.DataFrame()
+#    result_past_GainOnSaleOfSecurity =  pd.DataFrame()
+#    result_past_InterestExpense =  pd.DataFrame()
+#    result_past_InterestExpenseNonOperating =  pd.DataFrame()
+#    result_past_InterestIncome = pd.DataFrame()
+#    result_past_InterestIncomeNonOperating =  pd.DataFrame()
+#    result_past_MinorityInterests =  pd.DataFrame()
+#    result_past_NetIncome =  pd.DataFrame()
+    result_past_NetIncomeCommonStockholders =  pd.DataFrame()
+    result_past_NetIncomeContinuousOperations =  pd.DataFrame()
+    result_past_NetIncomeFromContinuingAndDiscontinuedOperation =  pd.DataFrame()
+    result_past_NetIncomeIncludingNoncontrollingInterests =  pd.DataFrame()
+#    result_past_NetInterestIncome =  pd.DataFrame()
+    result_past_NetNonOperatingInterestIncomeExpense =  pd.DataFrame()
+    result_past_NormalizedEBITDA =  pd.DataFrame()
+    result_past_NormalizedIncome =  pd.DataFrame()
+#    result_past_OperatingExpense =  pd.DataFrame()
+    result_past_OperatingIncome =  pd.DataFrame()
+    result_past_OperatingRevenue =  pd.DataFrame()
+#    result_past_OtherIncomeExpense =  pd.DataFrame()
+#    result_past_OtherNonOperatingIncomeExpenses =  pd.DataFrame()
+#    result_past_OtherunderPreferredStockDividend =  pd.DataFrame()
+    result_past_PretaxIncome =  pd.DataFrame()
+    result_past_ReconciledCostOfRevenue =  pd.DataFrame()
+#    result_past_ReconciledDepreciation =  pd.DataFrame()
+#    result_past_SellingGeneralAndAdministration =  pd.DataFrame()
+    result_past_TaxEffectOfUnusualItems =  pd.DataFrame()
+    result_past_TaxProvision =  pd.DataFrame()
+    result_past_TaxRateForCalcs =  pd.DataFrame()
+    result_past_TotalExpenses =  pd.DataFrame()
+#    result_past_TotalOperatingIncomeAsReported =  pd.DataFrame()
+#    result_past_TotalOtherFinanceCost =  pd.DataFrame()
+ #   result_past_TotalUnusualItems =  pd.DataFrame()
+ #   result_past_TotalUnusualItemsExcludingGoodwill =  pd.DataFrame()
+
     result_past_netincome = pd.DataFrame()
     result_past_stockholdersequity = pd.DataFrame()
     result_past_totalassets = pd.DataFrame()
 
-    for asofdate in common_asofdate:
-        result_past_totalrevenue = pd.concat([result_past_totalrevenue, past_totalrevenue[past_totalrevenue['asOfDate'] == asofdate]])
-        result_past_grossprofit = pd.concat([result_past_grossprofit, past_grossprofit[past_grossprofit['asOfDate'] == asofdate]])
-        result_past_netincome = pd.concat([result_past_netincome, past_netincome[past_netincome['asOfDate'] == asofdate]])
-        result_past_stockholdersequity = pd.concat([result_past_stockholdersequity, past_stockholdersequity[past_stockholdersequity['asOfDate'] == asofdate]])
-        result_past_totalassets = pd.concat([result_past_totalassets, past_totalassets[past_totalassets['asOfDate'] == asofdate]])
+    try:
+        for asofdate in common_asofdate:
+            result_past_totalrevenue = pd.concat([result_past_totalrevenue, past_totalrevenue[past_totalrevenue['asOfDate'] == asofdate]])
+            result_past_grossprofit = pd.concat([result_past_grossprofit, past_grossprofit[past_grossprofit['asOfDate'] == asofdate]])
+            result_past_CostOfRevenue = pd.concat([result_past_CostOfRevenue, past_CostOfRevenue[past_CostOfRevenue['asOfDate'] == asofdate]])
+            result_past_DilutedNIAvailtoComStockholders =  pd.concat([result_past_DilutedNIAvailtoComStockholders, past_DilutedNIAvailtoComStockholders[past_DilutedNIAvailtoComStockholders['asOfDate'] == asofdate]])
+            result_past_EBIT =  pd.concat([result_past_EBIT, past_EBIT[past_EBIT['asOfDate'] == asofdate]])
+            result_past_EBITDA =   pd.concat([result_past_EBITDA, past_EBITDA[past_EBITDA['asOfDate'] == asofdate]])
+    #        result_past_EarningsFromEquityInterest =  pd.concat([result_past_EarningsFromEquityInterest, past_EarningsFromEquityInterest[past_EarningsFromEquityInterest['asOfDate'] == asofdate]])
+    #        result_past_EarningsFromEquityInterestNetOfTax =  pd.concat([result_past_EarningsFromEquityInterestNetOfTax, past_EarningsFromEquityInterestNetOfTax[past_EarningsFromEquityInterestNetOfTax['asOfDate'] == asofdate]])
+    #         result_past_GainOnSaleOfSecurity=  pd.concat([result_past_GainOnSaleOfSecurity, past_GainOnSaleOfSecurity[past_GainOnSaleOfSecurity['asOfDate'] == asofdate]])
+    #        result_past_InterestExpense =  pd.concat([result_past_InterestExpense, past_InterestExpense[past_InterestExpense['asOfDate'] == asofdate]])
+    #        result_past_InterestExpenseNonOperating =  pd.concat([result_past_InterestExpenseNonOperating, past_InterestExpenseNonOperating[past_InterestExpenseNonOperating['asOfDate'] == asofdate]])
+    #        result_past_InterestIncome = pd.concat([result_past_InterestIncome, past_InterestIncome[past_InterestIncome['asOfDate'] == asofdate]])
+    #        result_past_InterestIncomeNonOperating =  pd.concat([result_past_InterestIncomeNonOperating, past_InterestIncomeNonOperating[past_InterestIncomeNonOperating['asOfDate'] == asofdate]])
+    #        result_past_MinorityInterests =  pd.concat([result_past_MinorityInterests, past_MinorityInterests[past_MinorityInterests['asOfDate'] == asofdate]])
+    #        result_past_NetIncome =  pd.concat([result_past_NetIncome, past_NetIncome[past_NetIncome['asOfDate'] == asofdate]])
+            result_past_NetIncomeCommonStockholders =  pd.concat([result_past_NetIncomeCommonStockholders, past_NetIncomeCommonStockholders[past_NetIncomeCommonStockholders['asOfDate'] == asofdate]])
+            result_past_NetIncomeContinuousOperations =  pd.concat([result_past_NetIncomeContinuousOperations, past_NetIncomeContinuousOperations[past_NetIncomeContinuousOperations['asOfDate'] == asofdate]])
+            result_past_NetIncomeFromContinuingAndDiscontinuedOperation =  pd.concat([result_past_NetIncomeFromContinuingAndDiscontinuedOperation, past_NetIncomeFromContinuingAndDiscontinuedOperation[past_NetIncomeFromContinuingAndDiscontinuedOperation['asOfDate'] == asofdate]])
+            result_past_NetIncomeIncludingNoncontrollingInterests =  pd.concat([result_past_NetIncomeIncludingNoncontrollingInterests, past_NetIncomeIncludingNoncontrollingInterests[past_NetIncomeIncludingNoncontrollingInterests['asOfDate'] == asofdate]])
+    #        result_past_NetInterestIncome =  pd.concat([result_past_NetInterestIncome, past_NetInterestIncome[past_NetInterestIncome['asOfDate'] == asofdate]])
+            result_past_NetNonOperatingInterestIncomeExpense =  pd.concat([result_past_NetNonOperatingInterestIncomeExpense, past_NetNonOperatingInterestIncomeExpense[past_NetNonOperatingInterestIncomeExpense['asOfDate'] == asofdate]])
+            result_past_NormalizedEBITDA =  pd.concat([result_past_NormalizedEBITDA, past_NormalizedEBITDA[past_NormalizedEBITDA['asOfDate'] == asofdate]])
+            result_past_NormalizedIncome =  pd.concat([result_past_NormalizedIncome, past_NormalizedIncome[past_NormalizedIncome['asOfDate'] == asofdate]])
+     #       result_past_OperatingExpense =  pd.concat([result_past_OperatingExpense, past_OperatingExpense[past_OperatingExpense['asOfDate'] == asofdate]])
+            result_past_OperatingIncome =  pd.concat([result_past_OperatingIncome, past_OperatingIncome[past_OperatingIncome['asOfDate'] == asofdate]])
+            result_past_OperatingRevenue =  pd.concat([result_past_OperatingRevenue, past_OperatingRevenue[past_OperatingRevenue['asOfDate'] == asofdate]])
+    #        result_past_OtherIncomeExpense =  pd.concat([result_past_OtherIncomeExpense, past_OtherIncomeExpense[past_OtherIncomeExpense['asOfDate'] == asofdate]])
+    #        result_past_OtherNonOperatingIncomeExpenses =  pd.concat([result_past_OtherNonOperatingIncomeExpenses, past_OtherNonOperatingIncomeExpenses[past_OtherNonOperatingIncomeExpenses['asOfDate'] == asofdate]])
+    #        result_past_OtherunderPreferredStockDividend =  pd.concat([result_past_OtherunderPreferredStockDividend, past_OtherunderPreferredStockDividend[past_OtherunderPreferredStockDividend['asOfDate'] == asofdate]])
+            result_past_PretaxIncome =  pd.concat([result_past_PretaxIncome, past_PretaxIncome[past_PretaxIncome['asOfDate'] == asofdate]])
+            result_past_ReconciledCostOfRevenue =  pd.concat([result_past_ReconciledCostOfRevenue, past_ReconciledCostOfRevenue[past_ReconciledCostOfRevenue['asOfDate'] == asofdate]])
+    #        result_past_ReconciledDepreciation =  pd.concat([result_past_ReconciledDepreciation, past_ReconciledDepreciation[past_ReconciledDepreciation['asOfDate'] == asofdate]])
+    #        result_past_SellingGeneralAndAdministration =  pd.concat([result_past_SellingGeneralAndAdministration, past_SellingGeneralAndAdministration[past_SellingGeneralAndAdministration['asOfDate'] == asofdate]])
+            result_past_TaxEffectOfUnusualItems =  pd.concat([result_past_TaxEffectOfUnusualItems, past_TaxEffectOfUnusualItems[past_TaxEffectOfUnusualItems['asOfDate'] == asofdate]])
+            result_past_TaxProvision =  pd.concat([result_past_TaxProvision, past_TaxProvision[past_TaxProvision['asOfDate'] == asofdate]])
+            result_past_TaxRateForCalcs =  pd.concat([result_past_TaxRateForCalcs, past_TaxRateForCalcs[past_TaxRateForCalcs['asOfDate'] == asofdate]])
+            result_past_TotalExpenses =  pd.concat([result_past_TotalExpenses, past_TotalExpenses[past_TotalExpenses['asOfDate'] == asofdate]])
+        #    result_past_TotalOperatingIncomeAsReported =  pd.concat([result_past_TotalOperatingIncomeAsReported, past_TotalOperatingIncomeAsReported[past_TotalOperatingIncomeAsReported['asOfDate'] == asofdate]])
+        #    result_past_TotalOtherFinanceCost =  pd.concat([result_past_TotalOtherFinanceCost, past_TotalOtherFinanceCost[past_TotalOtherFinanceCost['asOfDate'] == asofdate]])
+        #    result_past_TotalUnusualItems =  pd.concat([result_past_TotalUnusualItems, past_TotalUnusualItems[past_TotalUnusualItems['asOfDate'] == asofdate]])
+        #    result_past_TotalUnusualItemsExcludingGoodwill =  pd.concat([result_past_TotalUnusualItemsExcludingGoodwill, past_TotalUnusualItemsExcludingGoodwill[past_TotalUnusualItemsExcludingGoodwill['asOfDate'] == asofdate]])
 
+
+            result_past_netincome = pd.concat([result_past_netincome, past_netincome[past_netincome['asOfDate'] == asofdate]])
+            result_past_stockholdersequity = pd.concat([result_past_stockholdersequity, past_stockholdersequity[past_stockholdersequity['asOfDate'] == asofdate]])
+            result_past_totalassets = pd.concat([result_past_totalassets, past_totalassets[past_totalassets['asOfDate'] == asofdate]])
+    except Exception as e:
+        print(e)
+        return
+    
     # 時刻で昇順に並び替える
     result_past_totalrevenue = result_past_totalrevenue.sort_values('asOfDate')
     result_past_grossprofit = result_past_grossprofit.sort_values('asOfDate')
+    result_past_CostOfRevenue = result_past_CostOfRevenue.sort_values('asOfDate')
+    result_past_DilutedNIAvailtoComStockholders = result_past_DilutedNIAvailtoComStockholders.sort_values('asOfDate')
+    result_past_EBIT = result_past_EBIT.sort_values('asOfDate')
+    result_past_EBITDA = result_past_EBITDA.sort_values('asOfDate')
+#    result_past_EarningsFromEquityInterest = result_past_EarningsFromEquityInterest.sort_values('asOfDate')
+#    result_past_EarningsFromEquityInterestNetOfTax = result_past_EarningsFromEquityInterestNetOfTax.sort_values('asOfDate')
+#    result_past_GainOnSaleOfSecurity = result_past_GainOnSaleOfSecurity.sort_values('asOfDate')
+#    result_past_InterestExpense = result_past_InterestExpense.sort_values('asOfDate')
+#    result_past_InterestExpenseNonOperating = result_past_InterestExpenseNonOperating.sort_values('asOfDate')
+#    result_past_InterestIncome = result_past_InterestIncome.sort_values('asOfDate')
+#    result_past_InterestIncomeNonOperating = result_past_InterestIncomeNonOperating.sort_values('asOfDate')
+ #   result_past_MinorityInterests = result_past_MinorityInterests.sort_values('asOfDate')
+ #   result_past_NetIncome = result_past_NetIncome.sort_values('asOfDate')
+    result_past_NetIncomeCommonStockholders = result_past_NetIncomeCommonStockholders.sort_values('asOfDate')
+    result_past_NetIncomeContinuousOperations = result_past_NetIncomeContinuousOperations.sort_values('asOfDate')
+    result_past_NetIncomeFromContinuingAndDiscontinuedOperation = result_past_NetIncomeFromContinuingAndDiscontinuedOperation.sort_values('asOfDate')
+    result_past_NetIncomeIncludingNoncontrollingInterests = result_past_NetIncomeIncludingNoncontrollingInterests.sort_values('asOfDate')
+#    result_past_NetInterestIncome = result_past_NetInterestIncome.sort_values('asOfDate')
+    result_past_NetNonOperatingInterestIncomeExpense = result_past_NetNonOperatingInterestIncomeExpense.sort_values('asOfDate')
+    result_past_NormalizedEBITDA = result_past_NormalizedEBITDA.sort_values('asOfDate')
+    result_past_NormalizedIncome = result_past_NormalizedIncome.sort_values('asOfDate')
+ #   result_past_OperatingExpense = result_past_OperatingExpense.sort_values('asOfDate')
+    result_past_OperatingIncome = result_past_OperatingIncome.sort_values('asOfDate')
+    result_past_OperatingRevenue = result_past_OperatingRevenue.sort_values('asOfDate')
+#    result_past_OtherIncomeExpense = result_past_OtherIncomeExpense.sort_values('asOfDate')
+#    result_past_OtherNonOperatingIncomeExpenses = result_past_OtherNonOperatingIncomeExpenses.sort_values('asOfDate')
+#    result_past_OtherunderPreferredStockDividend = result_past_OtherunderPreferredStockDividend.sort_values('asOfDate')
+    result_past_PretaxIncome = result_past_PretaxIncome.sort_values('asOfDate')
+    result_past_ReconciledCostOfRevenue = result_past_ReconciledCostOfRevenue.sort_values('asOfDate')
+#    result_past_ReconciledDepreciation = result_past_ReconciledDepreciation.sort_values('asOfDate')
+#    result_past_SellingGeneralAndAdministration = result_past_SellingGeneralAndAdministration.sort_values('asOfDate')
+    result_past_TaxEffectOfUnusualItems = result_past_TaxEffectOfUnusualItems.sort_values('asOfDate')
+    result_past_TaxProvision = result_past_TaxProvision.sort_values('asOfDate')
+    result_past_TaxRateForCalcs = result_past_TaxRateForCalcs.sort_values('asOfDate')
+    result_past_TotalExpenses = result_past_TotalExpenses.sort_values('asOfDate')
+ #   result_past_TotalOperatingIncomeAsReported = result_past_TotalOperatingIncomeAsReported.sort_values('asOfDate')
+#    result_past_TotalOtherFinanceCost = result_past_TotalOtherFinanceCost.sort_values('asOfDate')
+#    result_past_TotalUnusualItems = result_past_TotalUnusualItems.sort_values('asOfDate')
+ #   result_past_TotalUnusualItemsExcludingGoodwill = result_past_TotalUnusualItemsExcludingGoodwill.sort_values('asOfDate')
+
     result_past_netincome = result_past_netincome.sort_values('asOfDate')
     result_past_stockholdersequity = result_past_stockholdersequity.sort_values('asOfDate')
     result_past_totalassets = result_past_totalassets.sort_values('asOfDate')
@@ -189,13 +384,44 @@ def get_company_finacial_info(ticker_data):
     df_financial_info = pd.DataFrame({'asOfDate':               result_past_totalrevenue['asOfDate'],
                                       'TotalRevenue':           result_past_totalrevenue['TotalRevenue'],
                                       'GrossProfit':            result_past_grossprofit['GrossProfit'],
+                                      'CostOfRevenue':          result_past_CostOfRevenue['CostOfRevenue'],
+                                      'DilutedNIAvailtoComStockholders':    result_past_DilutedNIAvailtoComStockholders['DilutedNIAvailtoComStockholders'],
+                                      'EBIT':                   result_past_EBIT['EBIT'],
+                                      'EBITDA':                 result_past_EBITDA['EBITDA'],
+#                                      'InterestExpense':        result_past_InterestExpense['InterestExpense'],
+#                                      'InterestExpenseNonOperating':        result_past_InterestExpenseNonOperating['InterestExpenseNonOperating'],
+ #                                     'InterestIncome':         result_past_InterestIncome['InterestIncome'],
+#                                      'InterestIncomeNonOperating':         result_past_InterestIncomeNonOperating['InterestIncomeNonOperating'],
+                                      'NetIncomeCommonStockholders':        result_past_NetIncomeCommonStockholders['NetIncomeCommonStockholders'],
+                                      'NetIncomeContinuousOperations':      result_past_NetIncomeContinuousOperations['NetIncomeContinuousOperations'],
+                                      'NetIncomeFromContinuingAndDiscontinuedOperation':    result_past_NetIncomeFromContinuingAndDiscontinuedOperation['NetIncomeFromContinuingAndDiscontinuedOperation'],
+                                      'NetIncomeIncludingNoncontrollingInterests':          result_past_NetIncomeIncludingNoncontrollingInterests['NetIncomeIncludingNoncontrollingInterests'],
+#                                      'NetInterestIncome':      result_past_NetInterestIncome['NetInterestIncome'],
+                                      'NetNonOperatingInterestIncomeExpense':   result_past_NetNonOperatingInterestIncomeExpense['NetNonOperatingInterestIncomeExpense'],
+                                      'NormalizedEBITDA':       result_past_NormalizedEBITDA['NormalizedEBITDA'],
+                                      'NormalizedIncome':       result_past_NormalizedIncome['NormalizedIncome'],
+#                                      'OperatingExpense':       result_past_OperatingExpense['OperatingExpense'],
+                                      'OperatingIncome':        result_past_OperatingIncome['OperatingIncome'],
+                                      'OperatingRevenue':       result_past_OperatingRevenue['OperatingRevenue'],
+ #                                     'OtherNonOperatingIncomeExpenses':    result_past_OtherNonOperatingIncomeExpenses['OtherNonOperatingIncomeExpenses'],
+                                      'PretaxIncome':   result_past_PretaxIncome['PretaxIncome'],
+                                      'ReconciledCostOfRevenue':    result_past_ReconciledCostOfRevenue['ReconciledCostOfRevenue'],
+#                                      'ReconciledDepreciation':     result_past_ReconciledDepreciation['ReconciledDepreciation'],
+                                      'TaxEffectOfUnusualItems':    result_past_TaxEffectOfUnusualItems['TaxEffectOfUnusualItems'],
+                                      'TaxProvision':   result_past_TaxProvision['TaxProvision'],
+                                      'TaxRateForCalcs':    result_past_TaxRateForCalcs['TaxRateForCalcs'],
+                                      'TotalExpenses':  result_past_TotalExpenses['TotalExpenses'],
+ #                                     'TotalOperatingIncomeAsReported': result_past_TotalOperatingIncomeAsReported['TotalOperatingIncomeAsReported'],
+#                                      'TotalUnusualItems':  result_past_TotalUnusualItems['TotalUnusualItems'],
+#                                      'TotalUnusualItemsExcludingGoodwill': result_past_TotalUnusualItemsExcludingGoodwill['TotalUnusualItemsExcludingGoodwill'],
+
                                       'StockholdersEquity':     result_past_stockholdersequity['StockholdersEquity'],
                                       'TotalAssets':            result_past_totalassets['TotalAssets'],
                                       'capitalAdequacyRatio':   ticker_past_capitaladequacyratio,
                                       'ROE':                    ticker_past_roe})
 
     df_financial_info = df_financial_info.reset_index()
-
+#    print(df_financial_info)
     return df_financial_info
 
 
