@@ -357,7 +357,7 @@ def get_company_finacial_info(ticker_data):
         income_statement[['TotalUnusualItemsExcludingGoodwill']]  = 0    
         past_TotalUnusualItemsExcludingGoodwill = income_statement[['asOfDate', 'TotalUnusualItemsExcludingGoodwill']]
         
-     try:
+    try:
         past_netincome = cash_flow[['asOfDate', 'NetIncome']]
         past_stockholdersequity = balance_sheet[['asOfDate', 'StockholdersEquity']]
         past_totalassets = balance_sheet[['asOfDate', 'TotalAssets']]
