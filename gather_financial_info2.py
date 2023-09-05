@@ -541,6 +541,7 @@ def get_company_finacial_info(ticker_data):
                                       'InterestExpenseNonOperating':        result_past_InterestExpenseNonOperating['InterestExpenseNonOperating'],
                                       'InterestIncome':         result_past_InterestIncome['InterestIncome'],
                                       'InterestIncomeNonOperating':         result_past_InterestIncomeNonOperating['InterestIncomeNonOperating'],
+                                      'NetIncome':         result_past_netincome['NetIncome'],
                                       'NetIncomeCommonStockholders':        result_past_NetIncomeCommonStockholders['NetIncomeCommonStockholders'],
                                       'NetIncomeContinuousOperations':      result_past_NetIncomeContinuousOperations['NetIncomeContinuousOperations'],
                                       'NetIncomeFromContinuingAndDiscontinuedOperation':    result_past_NetIncomeFromContinuingAndDiscontinuedOperation['NetIncomeFromContinuingAndDiscontinuedOperation'],
